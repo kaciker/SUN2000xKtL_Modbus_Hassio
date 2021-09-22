@@ -1,0 +1,125 @@
+# ############### SOLAR INTEGRATION ##################### https://github.com/Emilv2/huawei_solar
+
+  - platform: huawei_solar   
+    host: '192.168.31.92'
+    optimizers: true
+    battery: false
+    # slave: 0
+    
+  - platform: template   
+    sensors:
+      energy_used:
+       friendly_name: "Total Energía Usada"
+       unit_of_measurement: 'kWh'
+       value_template: >
+         {{ '%0.2f' | format(states('sensor.total_yield') | float - 
+                            states('sensor.grid_exported_energy') | float +  states('sensor.grid_accumulated_energy') | float) }}  
+      pv_consumed_power:
+       friendly_name: "Consumo casa instantaneo"
+       unit_of_measurement: 'W'
+       value_template: >
+         {{ '%0.2f' | format(states('sensor.total_yield') | float - 
+                            states('sensor.input_power') | float +  states('sensor.power_meter_active_power') | float) }}   
+                            
+      pv_total_yield:
+        friendly_name: "Rendimiento Total"
+        unit_of_measurement: "kWh"
+        icon_template: mdi:solar-power
+        value_template: "{{ state_attr('sensor.sun2000_6ktl_l1', 'total_yield') }}"                           
+  
+      pv_internal_temp:
+        friendly_name: "Temperatura Interna Inversor"
+        unit_of_measurement: 'ºC'
+        icon_template: mdi:thermometer-plus
+        value_template: "{{ state_attr('sensor.sun2000_6ktl_l1', 'internal_temperature') }}"
+        
+
+      pv_input_power:
+        friendly_name: "Producción DC"
+        unit_of_measurement: 'W'
+        icon_template: mdi:solar-panel-large
+        value_template: "{{ state_attr('sensor.sun2000_6ktl_l1', 'input_power') }}"
+        
+
+      pv_daily_yield:
+        friendly_name: "Rendimiento Diario"
+        unit_of_measurement: 'kWh'
+        icon_template: mdi:solar-panel-large
+        value_template: "{{ state_attr('sensor.sun2000_6ktl_l1', 'daily_yield') }}"
+
+      grid_exported_energy:
+        friendly_name: "Energía exportada a la RED"
+        unit_of_measurement: 'kWh'
+        icon_template: mdi:transmission-tower
+        value_template: "{{ state_attr('sensor.sun2000_6ktl_l1', 'grid_exported_energy') }}"
+             
+      energy_used_by_house:
+        friendly_name: "Energía usada en Casa"
+        unit_of_measurement: 'kWh'
+        icon_template: mdi:transmission-tower
+        value_template: "{{ state_attr('sensor.sun2000_6ktl_l1', 'grid_accumulated_energy') }}"
+
+      pv_string_01_voltage:
+        friendly_name: "Pv String 01 Voltage"
+        unit_of_measurement: 'V'
+        icon_template: mdi:solar-power
+        value_template: "{{ state_attr('sensor.sun2000_6ktl_l1', 'pv_string_01_voltage') }}"
+
+      pv_string_01_current:
+        friendly_name: "PV String 01 Current"
+        unit_of_measurement: 'A'
+        icon_template: mdi:solar-power
+        value_template: "{{ state_attr('sensor.sun2000_6ktl_l1', 'pv_string_01_current') }}"
+
+    #   pv_active_power:
+    #     friendly_name: "Potencia Power-Meter activa"
+    #     unit_of_measurement: 'kW'
+    #     icon_template: mdi:solar-power
+    #     value_template: "{{ state_attr('sensor.sun2000_6ktl_l1', 'power_meter_active_power') | float / 1000|round(2)  }}"
+
+      pv_active_power:
+        friendly_name: "Potencia Power-Meter activa"
+        unit_of_measurement: 'W'
+        icon_template: mdi:solar-power
+        value_template: "{{ state_attr('sensor.sun2000_6ktl_l1', 'power_meter_active_power') }}"
+        
+        
+      pv_string_01_power:
+        friendly_name: "PV String 01 Power"
+        unit_of_measurement: 'kW'
+        icon_template: mdi:solar-power
+        value_template: '{{ states("sensor.pv_string_01_voltage") |float * states("sensor.pv_string_01_current") | float / 1000|round(2) }}'
+
+      pv_efficiency:
+        friendly_name: "Eficiencia Solar"
+        unit_of_measurement: '%'
+        icon_template: mdi:solar-panel-large
+        value_template: "{{ state_attr('sensor.sun2000_6ktl_l1', 'efficiency') }}"
+
+      pv_optimizers:
+        friendly_name: "Optimizadores Online"
+        unit_of_measurement: 'un'
+        icon_template: mdi:solar-panel-large
+        value_template: "{{ state_attr('sensor.sun2000_6ktl_l1', 'nb_online_optimizers') }}"
+
+      pv_power_pic:
+        friendly_name: "Potencia pico día"
+        unit_of_measurement: 'W'
+        icon_template: mdi:solar-panel-large
+        value_template: "{{ state_attr('sensor.sun2000_6ktl_l1', 'day_active_power_peak') }}"   
+
+      pv_device_status:
+        friendly_name: "Device Status"
+        icon_template: mdi:solar-power
+        value_template: "{{ state_attr('sensor.sun2000_6ktl_l1', 'device_status') }}"   
+        
+      pv_start_time:
+        friendly_name: "Hora de Arranque INV"
+        icon_template: mdi:solar-power
+        value_template: "{{ state_attr('sensor.sun2000_6ktl_l1', 'startup_time') }}"           
+        
+      pv_stop_time:
+        friendly_name: "Hora de Parada INV"
+        icon_template: mdi:solar-power
+        value_template: "{{ state_attr('sensor.sun2000_6ktl_l1', 'shutdown_time') }}"           
+        
